@@ -1,0 +1,316 @@
+[
+    {
+        "id": "f2e74e8e0aad3e4c",
+        "type": "tab",
+        "label": "IoT Project",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "462a709eb9f5a892",
+        "type": "smart-plug",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "TP1",
+        "device": "192.168.2.194",
+        "interval": 10000,
+        "eventInterval": 1000,
+        "x": 430,
+        "y": 400,
+        "wires": [
+            [
+                "e768d30b0078d713"
+            ]
+        ]
+    },
+    {
+        "id": "aeb71a188084bcf4",
+        "type": "inject",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "On",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "topic": "plug_input",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 110,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e768d30b0078d713",
+        "type": "debug",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "d9027c71a02a2aea",
+        "type": "serial in",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "",
+        "serial": "38c7f66fba2fa5d4",
+        "x": 90,
+        "y": 260,
+        "wires": [
+            [
+                "a7b0c83cde39e5fe"
+            ]
+        ]
+    },
+    {
+        "id": "69c79a416ce083f4",
+        "type": "inject",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "Off",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "plug_input",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 110,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a7b0c83cde39e5fe",
+        "type": "function",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "string to int",
+        "func": "msg.sensor = parseInt(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 260,
+        "wires": [
+            [
+                "0d3f8d8b4be1f3be"
+            ]
+        ]
+    },
+    {
+        "id": "0d3f8d8b4be1f3be",
+        "type": "function",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "Condition",
+        "func": "if (msg.sensor >= 400)\n    msg.payload = true;\nelse if (msg.sensor <400)\n    msg.payload = false;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0b72c2f8da40847e",
+        "type": "inject",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "On at Night",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "23 16 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 150,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "95e55656f54717bd",
+        "type": "inject",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "Off at Daytime",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "24 16 * * *",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 160,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1da419bee80db1e4",
+        "type": "comment",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "Daylight Detection Mode",
+        "info": "",
+        "x": 150,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "71d86c12087312f8",
+        "type": "comment",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "Day and Night Schedule Mode",
+        "info": "",
+        "x": 160,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8bb81bb4126ef12c",
+        "type": "smart-plug",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "TP1",
+        "device": "192.168.2.194",
+        "interval": 10000,
+        "eventInterval": 1000,
+        "x": 570,
+        "y": 260,
+        "wires": [
+            [
+                "87fe49121a77d662"
+            ]
+        ]
+    },
+    {
+        "id": "07cc11e539b15dbf",
+        "type": "comment",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "Manual Mode",
+        "info": "",
+        "x": 110,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "95213d2b1f8abf7e",
+        "type": "smart-plug",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "TP1",
+        "device": "192.168.2.194",
+        "interval": 10000,
+        "eventInterval": 1000,
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "94aa228e0c15cc7c"
+            ]
+        ]
+    },
+    {
+        "id": "87fe49121a77d662",
+        "type": "debug",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 770,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "94aa228e0c15cc7c",
+        "type": "debug",
+        "z": "f2e74e8e0aad3e4c",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "38c7f66fba2fa5d4",
+        "type": "serial-port",
+        "serialport": "COM4",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    }
+]
