@@ -1,1 +1,1 @@
-# IoT-Project
+# 4ID3 - IoT Project - Simulated Occupied Home
