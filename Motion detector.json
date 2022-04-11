@@ -1,0 +1,238 @@
+[
+    {
+        "id": "36e3dac7f2995c22",
+        "type": "tab",
+        "label": "Flow 4",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "3ce7b45ed24a6d2a",
+        "type": "e-mail",
+        "z": "36e3dac7f2995c22",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "secure": true,
+        "tls": true,
+        "name": "",
+        "dname": "Node-Red",
+        "x": 730,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "5bc9ce58321394f4",
+        "type": "function",
+        "z": "36e3dac7f2995c22",
+        "name": "Trigger",
+        "func": "var payload=msg.payload; \nvar alarm_flag=context.get(\"alarm_flag\"); \n\nif(typeof alarm_flag == \"undefined\" )\nalarm_flag=false; \n\nif (payload == 1 && !alarm_flag)\n{ \n    alarm_flag=true; \n    msg.alarm =1; \n    context.set(\"alarm_flag\", alarm_flag); \n    return msg;\n} \n\nif (payload ==0 && alarm_flag){ \n    alarm_flag=false; \n    msg.alarm =0;\n    context.set(\"alarm_flag\", alarm_flag); \n    //return msg;\n} ",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 580,
+        "wires": [
+            [
+                "acfe9c74b4f84e4e",
+                "06b9d7dba9a55fd2"
+            ]
+        ]
+    },
+    {
+        "id": "acfe9c74b4f84e4e",
+        "type": "debug",
+        "z": "36e3dac7f2995c22",
+        "name": "trigger",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "06b9d7dba9a55fd2",
+        "type": "function",
+        "z": "36e3dac7f2995c22",
+        "name": "Send Email",
+        "func": "\nmsg.to = \"mickles@mcmaster.ca\";\nmsg.from=\"noreply@gmail.com\"; \n\nvar date = new Date(); \nvar message = \"\"; \nif (msg.alarm){ \n    msg.topic=\"Motion Detected\"; \n    message = \"Camera detected motion at \";\n    \nmsg.payload = message + date; \nreturn msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 660,
+        "wires": [
+            [
+                "3ce7b45ed24a6d2a",
+                "bf2df34b67e692ee",
+                "93842cd4e93bb2be"
+            ]
+        ]
+    },
+    {
+        "id": "3606971a545ed2db",
+        "type": "trigger",
+        "z": "36e3dac7f2995c22",
+        "name": "",
+        "op1": "",
+        "op2": "",
+        "op1type": "pay",
+        "op2type": "payl",
+        "duration": "10",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "topic",
+        "outputs": 1,
+        "x": 270,
+        "y": 520,
+        "wires": [
+            [
+                "5bc9ce58321394f4"
+            ]
+        ]
+    },
+    {
+        "id": "6d1d3f96ce56e523",
+        "type": "serial in",
+        "z": "36e3dac7f2995c22",
+        "name": "",
+        "serial": "9ec8e081b668a1c2",
+        "x": 110,
+        "y": 480,
+        "wires": [
+            [
+                "aaf416fc4c289c08",
+                "3606971a545ed2db"
+            ]
+        ]
+    },
+    {
+        "id": "aaf416fc4c289c08",
+        "type": "debug",
+        "z": "36e3dac7f2995c22",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "bf2df34b67e692ee",
+        "type": "ui_toast",
+        "z": "36e3dac7f2995c22",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 750,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "59661865cfbc03cd",
+        "type": "ui_template",
+        "z": "36e3dac7f2995c22",
+        "group": "a06177e812624407",
+        "name": "Dashboard Event Log ",
+        "order": 1,
+        "width": "6",
+        "height": "19",
+        "format": "<ul>\n <li ng-repeat=\"x in msg.payload\">\n <font color=\"red\">{{x.topic}}</font>\n    <ul>\n        <li>{{x.payload}}</li>\n    </ul>\n </li>\n</ul>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": false,
+        "templateScope": "local",
+        "className": "",
+        "x": 760,
+        "y": 780,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "93842cd4e93bb2be",
+        "type": "function",
+        "z": "36e3dac7f2995c22",
+        "name": "Save Events",
+        "func": "\n// initialise the counter to 0 if it doesn't exist already\nvar dashboardLog = context.get('dashboardLog')|| [];\n\ndashboardLog.push(msg);\nif (dashboardLog.length > 20){\n    // Delete oldest message if > 20\n    dashboardLog.shift();\n    dashboardLog.length = 20;\n} \n\n\n// store the value back\ncontext.set('dashboardLog',dashboardLog);\n\n// make it part of the outgoing msg object\nmsg = {};\nmsg.payload = dashboardLog;\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 760,
+        "wires": [
+            [
+                "59661865cfbc03cd"
+            ]
+        ]
+    },
+    {
+        "id": "9ec8e081b668a1c2",
+        "type": "serial-port",
+        "serialport": "COM10",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "100000"
+    },
+    {
+        "id": "a06177e812624407",
+        "type": "ui_group",
+        "name": "Dashboard Event Log",
+        "tab": "30a5e33e32e552da",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "30a5e33e32e552da",
+        "type": "ui_tab",
+        "name": "Motion Sensor",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    }
+]
